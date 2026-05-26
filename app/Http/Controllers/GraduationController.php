@@ -43,20 +43,14 @@ class GraduationController extends Controller
 
         clearstatcache();
 
-        try {
-            $certificateService = app(\App\Services\CertificateService::class);
-            $gambar = $certificateService->generate($nama_siswa, $nisn, $status_kelulusan);
+        // Only use cached certificate URLs for student access.
+        $cacheKey = "student_{$nisn}_cert_path";
 
-            $outputPath = public_path("assets/img/sertifikat/{$nisn}.jpg");
-            imagejpeg($gambar, $outputPath);
-            imagedestroy($gambar);
-
-            $sertifikatPath = "assets/img/sertifikat/{$nisn}.jpg";
-
-            return view('graduation.result', compact('student', 'sertifikatPath'));
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
+        $sertifikatPath = null;
+        if ($student) {
+            $sertifikatPath = \Illuminate\Support\Facades\Cache::get($cacheKey);
         }
+        return view('graduation.result', compact('student', 'sertifikatPath'));
     }
 
 }

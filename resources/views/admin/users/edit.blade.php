@@ -1,123 +1,73 @@
 @section('title', 'Edit Pengguna')
 
 @section('breadcrumbs')
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.users.index') }}">Data Pengguna</a></li>
-<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Edit Pengguna</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.users.index') }}">Data Pengguna</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li class="text-xs text-slate-400">Edit Pengguna</li>
 @endsection
 
 <x-layouts.admin-layout>
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card my-4">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                        <h6 class="text-white text-capitalize ps-3">Edit Pengguna</h6>
-                    </div>
-                </div>
-                <div class="card-body px-3 pb-2">
-                    <form method="POST" action="{{ route('admin.users.update', $user) }}">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group input-group-outline my-3 is-filled">
-                                    <label class="form-label">Nama Lengkap</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                           name="name" value="{{ old('name', $user->name) }}" required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="input-group input-group-outline my-3 is-filled">
-                                    <label class="form-label">Alamat Email</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                           name="email" value="{{ old('email', $user->email) }}" required>
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="input-group input-group-outline my-3">
-                                    <label class="form-label">Password Baru (kosongkan jika tidak ingin mengubah)</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                           name="password">
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="input-group input-group-outline my-3">
-                                    <label class="form-label">Konfirmasi Password Baru</label>
-                                    <input type="password" class="form-control"
-                                           name="password_confirmation">
-                                </div>
-
-                                <div class="my-4">
-                                    <label class="ms-0">Peran</label>
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="radio" name="role"
-                                               id="role_admin" value="admin"
-                                               {{ old('role', $user->role) === 'admin' ? 'checked' : '' }}
-                                               {{ auth()->id() === $user->id ? 'disabled' : '' }}>
-                                        <label class="custom-control-label" for="role_admin">
-                                            Admin
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="role"
-                                               id="role_operator" value="operator"
-                                               {{ old('role', $user->role) === 'operator' ? 'checked' : '' }}
-                                               {{ auth()->id() === $user->id ? 'disabled' : '' }}>
-                                        <label class="custom-control-label" for="role_operator">
-                                            Operator
-                                        </label>
-                                    </div>
-                                    @error('role')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <a href="{{ route('admin.users.index') }}" class="btn btn-light me-2">
-                                    Batal
-                                </a>
-                                <button type="submit" class="btn bg-gradient-primary">
-                                    Perbarui Pengguna
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+    <div class="space-y-6">
+        <div class="glass-panel rounded-2xl shadow-xl p-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-display font-bold text-xl text-white tracking-wide">Edit Pengguna</h2>
+                    <p class="text-xs text-slate-400 mt-1">Perbarui data pengguna tanpa mengubah logika bisnis.</p>
                 </div>
             </div>
         </div>
+
+        <div class="glass-panel rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+                <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-6">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Nama Lengkap</label>
+                            <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition" />
+                            @error('name')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Alamat Email</label>
+                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition" />
+                            @error('email')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Password Baru (kosongkan jika tidak ingin mengubah)</label>
+                            <input type="password" name="password" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition" />
+                            @error('password')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Konfirmasi Password Baru</label>
+                            <input type="password" name="password_confirmation" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition" />
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl border border-white/10 p-5">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">Peran Pengguna</p>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-4 transition hover:border-indigo-500/30">
+                                <input type="radio" name="role" value="admin" class="h-4 w-4 text-indigo-500 focus:ring-indigo-500" {{ old('role', $user->role) === 'admin' ? 'checked' : '' }} {{ auth()->id() === $user->id ? 'disabled' : '' }} />
+                                <span class="text-sm text-slate-200">Admin</span>
+                            </label>
+                            <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-4 transition hover:border-indigo-500/30">
+                                <input type="radio" name="role" value="operator" class="h-4 w-4 text-indigo-500 focus:ring-indigo-500" {{ old('role', $user->role) === 'operator' ? 'checked' : '' }} {{ auth()->id() === $user->id ? 'disabled' : '' }} />
+                                <span class="text-sm text-slate-200">Operator</span>
+                            </label>
+                        </div>
+                        @error('role')<p class="mt-3 text-xs text-rose-400">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 justify-end">
+                        <a href="{{ route('admin.users.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 border border-white/10 text-slate-300 text-xs font-semibold transition hover:bg-slate-700">Batal</a>
+                        <button type="submit" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white text-xs font-semibold transition shadow-md">Perbarui Pengguna</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
 </x-layouts.admin-layout>
-@section('custom_js')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Handle Material Kit Input Group Outline behavior
-        const inputs = document.querySelectorAll('.input-group-outline input');
-        inputs.forEach(input => {
-            if (input.value) {
-                input.parentElement.classList.add('is-filled');
-            }
-            input.addEventListener('focus', () => {
-                input.parentElement.classList.add('focused', 'is-filled');
-            });
-            input.addEventListener('blur', () => {
-                input.parentElement.classList.remove('focused');
-                if (!input.value) {
-                    input.parentElement.classList.remove('is-filled');
-                }
-            });
-        });
-    });
-</script>
-@endsection

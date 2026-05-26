@@ -1,63 +1,43 @@
 @section('title','Reset Password')
 
 <x-guest-layout>
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-lg-4 col-md-8 col-12 mx-auto">
-            <div class="card z-index-0 fadeIn3 fadeInBottom">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                        <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Reset Password</h4>
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md">
+            <div class="glass-panel rounded-2xl p-6 shadow-lg">
+                <h4 class="text-lg font-semibold text-white text-center">Reset Password</h4>
+                <p class="text-sm text-slate-400 text-center mt-2">Masukkan password baru Anda</p>
+
+                <form method="POST" action="{{ route('password.store') }}" class="mt-4 space-y-4">
+                    @csrf
+                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+                    <div>
+                        <label class="text-xs text-slate-400">Email</label>
+                        <input type="email" name="email" value="{{ old('email', $request->email) }}" required readonly class="w-full mt-1 rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm" />
+                        @error('email')<p class="text-xs text-rose-400 mt-1">{{ $message }}</p>@enderror
                     </div>
-                </div>
-                <div class="card-body">
-                    <p class="text-center text-muted mb-4">Masukkan password baru Anda</p>
 
-                    <form role="form" class="text-start" method="POST" action="{{ route('password.store') }}">
-                        @csrf
+                    <div>
+                        <label class="text-xs text-slate-400">Password Baru</label>
+                        <input type="password" name="password" required class="w-full mt-1 rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm" />
+                        @error('password')<p class="text-xs text-rose-400 mt-1">{{ $message }}</p>@enderror
+                    </div>
 
-                        <!-- Password Reset Token -->
-                        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                    <div>
+                        <label class="text-xs text-slate-400">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" required class="w-full mt-1 rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm" />
+                        @error('password_confirmation')<p class="text-xs text-rose-400 mt-1">{{ $message }}</p>@enderror
+                    </div>
 
-                        <div class="input-group input-group-outline mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" value="{{ old('email', $request->email) }}" required autofocus readonly>
-                        </div>
-                        @error('email')
-                            <div class="text-danger text-xs mb-3">{{ $message }}</div>
-                        @enderror
+                    <div>
+                        <button type="submit" class="w-full rounded-xl px-4 py-2 bg-indigo-600 text-white font-semibold">Reset Password</button>
+                    </div>
+                </form>
 
-                        <div class="input-group input-group-outline mb-3">
-                            <label class="form-label">Password Baru</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        @error('password')
-                            <div class="text-danger text-xs mb-3">{{ $message }}</div>
-                        @enderror
-
-                        <div class="input-group input-group-outline mb-3">
-                            <label class="form-label">Konfirmasi Password</label>
-                            <input type="password" name="password_confirmation" class="form-control" required>
-                        </div>
-                        @error('password_confirmation')
-                            <div class="text-danger text-xs mb-3">{{ $message }}</div>
-                        @enderror
-
-                        <div class="text-center">
-                            <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">
-                                Reset Password
-                            </button>
-                        </div>
-
-                        <p class="mt-4 text-sm text-center">
-                            <a href="{{ route('login') }}" class="text-primary text-gradient font-weight-bold">
-                                Kembali ke Login
-                            </a>
-                        </p>
-                    </form>
-                </div>
+                <p class="mt-4 text-sm text-center text-slate-400">
+                    <a href="{{ route('login', ['school_slug' => request()->route('school_slug')]) }}" class="text-indigo-400 font-semibold">Kembali ke Login</a>
+                </p>
             </div>
         </div>
     </div>
-</div>
 </x-guest-layout>

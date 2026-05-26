@@ -1,109 +1,143 @@
-@section('title','Hasil Kelulusan')
+<!-- resources/views/graduation/result.blade.php -->
+
+@section('title', 'Hasil Kelulusan')
+
 <x-guest-layout>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 col-12 mx-auto">
-                <div class="card z-index-0 fadeIn3 fadeInBottom">
-                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                        <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                            <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Hasil Pengumuman Kelulusan</h4>
+    <div class="max-w-6xl mx-auto px-4 py-12">
+        <div class="text-center mb-8">
+            <h4 class="text-white text-3xl font-semibold tracking-tight">Hasil Pengumuman Kelulusan</h4>
+            <p class="mt-2 text-slate-400 max-w-2xl mx-auto">Lihat status kelulusan, sertifikat, dan data nilai yang sudah diinput oleh admin sekolah.</p>
+        </div>
+
+        @if ($student)
+            <div class="grid gap-6 lg:grid-cols-2">
+                <div class="glass-panel rounded-3xl shadow-2xl border border-white/10 p-6">
+                    <div class="flex items-start justify-between gap-4 mb-6">
+                        <div>
+                            <h5 class="text-slate-200 text-lg font-semibold">Profil Siswa</h5>
+                            <p class="text-slate-400 text-sm mt-1">Informasi dasar siswa dan status kelulusan.</p>
                         </div>
+                        <span class="inline-flex items-center rounded-full bg-slate-800/80 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">{{ $student->status ? 'Lulus' : 'Tidak Lulus' }}</span>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Data Siswa:</h6>
-                                <p>
-                                    <strong>NIS:</strong> {{ $student->nis }}<br>
-                                    <strong>Nama:</strong> {{ $student->nama }}<br>
-                                    <strong>Kelas:</strong> {{ $student->schoolClass->nama_kelas }}
-                                </p>
-                            </div>
-                            <div class="col-md-6 text-end">
-                                <h3 class="mt-4 {{ $student->status === 'LULUS' ? 'text-success' : 'text-danger' }}">
-                                    {{ $student->status }}
-                                </h3>
-                            </div>
-                        </div>
 
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mata Pelajaran</th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nilai Akhir</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($student->grades as $grade)
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex px-2 py-1">
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{ $grade->mata_pelajaran }}</h6>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p class="text-sm font-weight-bold mb-0">{{ number_format($grade->nilai_akhir, 2) }}</p>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td>
-                                            <h6 class="mb-0 text-sm text-end">Rata-rata:</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-0 text-sm font-weight-bold">{{ number_format($student->nilai_rata_rata, 2) }}</h6>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                    <dl class="grid gap-4 text-sm text-slate-300">
+                        <div class="space-y-1">
+                            <dt class="text-slate-400">Nama Lengkap</dt>
+                            <dd class="text-white">{{ $student->nama }}</dd>
                         </div>
+                        <div class="space-y-1">
+                            <dt class="text-slate-400">NIS</dt>
+                            <dd class="text-white">{{ $student->nis }}</dd>
+                        </div>
+                        <div class="space-y-1">
+                            <dt class="text-slate-400">Kelas</dt>
+                            <dd class="text-white">{{ optional($student->schoolClass)->name ?? 'Tidak tersedia' }}</dd>
+                        </div>
+                    </dl>
 
-                        @if($student->catatan)
-                            <div class="alert alert-info text-white mt-4">
-                                <strong>Catatan:</strong><br>
-                                {{ $student->catatan }}
-                            </div>
+                    <div class="mt-6 rounded-3xl border border-slate-700/70 bg-slate-950/70 p-4">
+                        <p class="text-slate-400 text-sm">Status sertifikat</p>
+                        @if (!empty($sertifikatPath))
+                            <p class="mt-2 text-emerald-300 font-semibold">Sertifikat sudah tersedia. Klik unduh untuk menyimpan file.</p>
+                        @else
+                            <p class="mt-2 text-amber-300 font-semibold">Sertifikat belum digenerate oleh admin. Silakan cek kembali nanti.</p>
                         @endif
+                    </div>
+                </div>
 
-                        <!-- Preview Sertifikat -->
-                        <div class="text-center mt-4">
-                            <img src="{{ asset($sertifikatPath) }}"
+                <div class="glass-panel rounded-3xl shadow-2xl border border-white/10 p-6">
+                    <div class="flex items-start justify-between gap-4 mb-6">
+                        <div>
+                            <h5 class="text-slate-200 text-lg font-semibold">Sertifikat Kelulusan</h5>
+                            <p class="text-slate-400 text-sm mt-1">Tampilan cepat sertifikat jika sudah tersedia.</p>
+                        </div>
+                        <span class="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-200">{{ !empty($sertifikatPath) ? 'Tersedia' : 'Belum tersedia' }}</span>
+                    </div>
+
+                    @if (!empty($sertifikatPath))
+                        <div class="rounded-3xl overflow-hidden border border-white/10 bg-slate-950/80">
+                            <img src="{{ $sertifikatPath }}"
                                 alt="Sertifikat Kelulusan"
-                                class="img-fluid rounded shadow"
-                                style="max-width: 400px; cursor: zoom-in;"
-                                data-bs-toggle="modal"
-                                data-bs-target="#previewModal">
+                                class="w-full object-cover"
+                                style="max-height:420px;">
                         </div>
 
-                        <div class="text-center mt-4">
-                            <a href="{{ asset($sertifikatPath) }}"
-                            class="btn bg-gradient-warning text-white"
-                            download="sertifikat-{{ $student->nis }}.jpg"
-                            title="Download sertifikat kelulusan">
-                            <span class="material-icons-round me-1" style="vertical-align: middle;">download</span>
-                            Download Sertifikat
+                        <div class="flex flex-wrap gap-3 justify-center mt-6">
+                            <a href="{{ $sertifikatPath }}"
+                                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-amber-500 text-slate-950 font-semibold shadow-lg shadow-amber-500/20"
+                                download="sertifikat-{{ $student->nis }}.jpg">
+                                <span class="material-icons-round">download</span>
+                                Unduh
                             </a>
-                             <!-- Tombol Share WA -->
-                            <a href="https://wa.me/?text={{ urlencode('Halo, ini sertifikat kelulusan atas nama ' . $student->nama . ' (NIS: ' . $student->nis . ').
-                                Silakan download di sini: ' . asset($sertifikatPath)) }}"
+
+                            <a href="https://wa.me/?text={{ urlencode('Halo, ini sertifikat kelulusan atas nama ' . $student->nama . ' (NIS: ' . $student->nis . '). Silakan download di sini: ' . $sertifikatPath) }}"
                                 target="_blank"
-                                class="btn bg-success text-white">
-                                    <span class="material-icons-round me-1">share</span>
-                                    Bagikan via WhatsApp
-                            </a>
-                            <a href="{{ route('home') }}" class="btn bg-gradient-dark">
-                            <span class="material-icons-round me-1" style="vertical-align: middle;">home</span>
-                            Kembali
+                                class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-emerald-500 text-slate-950 font-semibold shadow-lg shadow-emerald-500/20">
+                                <span class="material-icons-round">share</span>
+                                Bagikan
                             </a>
                         </div>
+                    @else
+                        <div class="rounded-3xl border border-amber-500/20 bg-amber-500/5 p-6 text-amber-200">
+                            <p class="text-sm font-semibold">Sertifikat belum digenerate.</p>
+                            <p class="mt-2 text-slate-400">Admin sekolah harus melakukan generate ulang sertifikat terlebih dahulu.</p>
+                        </div>
+                    @endif
+
+                    <div class="mt-6 text-right">
+                        <a href="{{ route('home') }}" class="inline-flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/80 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800 transition">
+                            <span class="material-icons-round">home</span>
+                            Kembali ke beranda
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="glass-panel rounded-3xl shadow-2xl border border-white/10 p-6 mt-8">
+                <div class="flex items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h5 class="text-slate-200 text-lg font-semibold">Data Nilai</h5>
+                        <p class="text-slate-400 text-sm mt-1">Data nilai yang diinput oleh admin sekolah untuk siswa ini.</p>
+                    </div>
+                    <span class="inline-flex items-center rounded-full bg-slate-800/80 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">{{ $student->grades->count() }} mata pelajaran</span>
+                </div>
+
+                @if ($student->grades->isNotEmpty())
+                    <div class="overflow-x-auto rounded-3xl border border-slate-700/70 bg-slate-950/80">
+                        <table class="min-w-full divide-y divide-slate-700 text-sm text-left text-slate-300">
+                            <thead class="bg-slate-900/90 text-xs uppercase tracking-[0.2em] text-slate-500">
+                                <tr>
+                                    <th class="px-4 py-4">Mata Pelajaran</th>
+                                    <th class="px-4 py-4">Nilai Sekolah</th>
+                                    <th class="px-4 py-4">Nilai Ujian</th>
+                                    <th class="px-4 py-4">Nilai Akhir</th>
+                                    <th class="px-4 py-4">Catatan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700 bg-slate-900/80">
+                                @foreach ($student->grades as $grade)
+                                    <tr class="hover:bg-slate-800/80 transition-colors">
+                                        <td class="px-4 py-4 text-white">{{ $grade->mata_pelajaran }}</td>
+                                        <td class="px-4 py-4">{{ $grade->nilai_sekolah ?? '-' }}</td>
+                                        <td class="px-4 py-4">{{ $grade->nilai_ujian ?? '-' }}</td>
+                                        <td class="px-4 py-4 font-semibold text-emerald-300">{{ $grade->nilai_akhir ?? '-' }}</td>
+                                        <td class="px-4 py-4 text-slate-400">{{ $grade->catatan ?? '—' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="rounded-3xl border border-slate-700/70 bg-slate-950/80 p-6 text-slate-300">
+                        <p class="font-semibold text-slate-100">Data nilai dalam proses input admin.</p>
+                        <p class="mt-2 text-slate-400">Nilai belum tersedia. Mohon cek kembali nanti setelah admin sekolah selesai memasukkan data.</p>
+                    </div>
+                @endif
+            </div>
+        @else
+            <div class="glass-panel rounded-3xl shadow-2xl border border-white/10 p-8 text-center">
+                <p class="text-slate-400">Siswa tidak ditemukan.</p>
+            </div>
+        @endif
     </div>
 </x-guest-layout>

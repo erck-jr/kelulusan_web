@@ -1,106 +1,59 @@
 @section('title', 'Tambah Pengumuman')
 
 @section('breadcrumbs')
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.announcements.index') }}">Pengumuman</a></li>
-<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tambah Pengumuman</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.announcements.index') }}">Data Pengumuman</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li class="text-xs text-slate-400">Tambah Pengumuman</li>
 @endsection
 
 <x-layouts.admin-layout>
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card my-4">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                        <h6 class="text-white text-capitalize ps-3">Tambah Pengumuman Baru</h6>
+    <div class="space-y-6">
+        <div class="glass-panel rounded-2xl shadow-xl p-6">
+            <h2 class="font-display font-bold text-xl text-white tracking-wide">Tambah Pengumuman Baru</h2>
+            <p class="text-xs text-slate-400 mt-1">Isi detail pengumuman dan atur waktu publikasinya.</p>
+        </div>
+
+        <div class="glass-panel rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+                <form method="POST" action="{{ route('admin.announcements.store') }}" class="space-y-6">
+                    @csrf
+
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Judul Pengumuman</label>
+                            <input type="text" name="title" value="{{ old('title') }}" required class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none transition" />
+                            @error('title')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Isi Pengumuman</label>
+                            <textarea name="content" rows="10" required class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none transition" placeholder="Tulis isi pengumuman...">{{ old('content') }}</textarea>
+                            @error('content')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
                     </div>
-                </div>
-                <div class="card-body px-3 pb-2">
-                    <form method="POST" action="{{ route('admin.announcements.store') }}">
-                        @csrf
 
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="input-group input-group-outline my-3">
-                                    <label class="form-label">Judul Pengumuman</label>
-                                    <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                           name="title" value="{{ old('title') }}" required autofocus>
-                                    @error('title')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="input-group input-group-outline my-3">
-                                    <textarea class="form-control @error('content') is-invalid @enderror"
-                                              name="content" rows="10" placeholder="Isi Pengumuman"
-                                              required>{{ old('content') }}</textarea>
-                                    @error('content')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6 class="mb-3">Pengaturan Publikasi</h6>
-
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" name="is_published"
-                                                   id="is_published" value="1" {{ old('is_published') ? 'checked' : '' }}>
-                                            <label class="custom-control-label" for="is_published">
-                                                Publikasikan sekarang
-                                            </label>
-                                        </div>
-
-                                        <div class="input-group input-group-outline my-3">
-                                            <label class="form-label">Tanggal Publikasi</label>
-                                            <input type="datetime-local" class="form-control @error('published_at') is-invalid @enderror"
-                                                   name="published_at" value="">
-                                            @error('published_at')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="d-flex justify-content-end mt-4">
-                                            <a href="{{ route('admin.announcements.index') }}" class="btn btn-light me-2">
-                                                Batal
-                                            </a>
-                                            <button type="submit" class="btn bg-gradient-primary">
-                                                Simpan Pengumuman
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="grid gap-6 lg:grid-cols-3">
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Publikasikan sekarang</label>
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" name="is_published" id="is_published" value="1" {{ old('is_published') ? 'checked' : '' }} class="h-4 w-4 rounded border-white/10 bg-slate-900 text-cyan-500 focus:ring-cyan-500" />
+                                <label for="is_published" class="text-sm text-slate-200">Aktifkan publikasi sekarang</label>
                             </div>
                         </div>
-                    </form>
-                </div>
+                        <div class="space-y-2 lg:col-span-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Tanggal Publikasi</label>
+                            <input type="datetime-local" name="published_at" value="{{ old('published_at') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none transition" />
+                            @error('published_at')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 justify-end">
+                        <a href="{{ route('admin.announcements.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 border border-white/10 text-slate-300 text-xs font-semibold transition hover:bg-slate-700">Batal</a>
+                        <button type="submit" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 text-white text-xs font-semibold transition shadow-md">Simpan Pengumuman</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
-
-@section('custom_js')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Handle Material Kit Input Group Outline behavior
-        const inputs = document.querySelectorAll('.input-group-outline input, .input-group-outline textarea');
-        inputs.forEach(input => {
-            if (input.value) {
-                input.parentElement.classList.add('is-filled');
-            }
-            input.addEventListener('focus', () => {
-                input.parentElement.classList.add('focused', 'is-filled');
-            });
-            input.addEventListener('blur', () => {
-                input.parentElement.classList.remove('focused');
-                if (!input.value) {
-                    input.parentElement.classList.remove('is-filled');
-                }
-            });
-        });
-    });
-</script>
-@endsection
 </x-layouts.admin-layout>

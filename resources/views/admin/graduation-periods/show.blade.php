@@ -1,152 +1,124 @@
 @section('title', 'Detail Periode Kelulusan')
 
 @section('breadcrumbs')
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.graduation-periods.index') }}">Daftar Periode Kelulusan</a></li>
-<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Detail Periode</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.graduation-periods.index') }}">Daftar Periode Kelulusan</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li class="text-xs text-slate-400">Detail Periode</li>
 @endsection
 
 <x-layouts.admin-layout>
-    <div class="row">
-        <div class="col-12">
-            <div class="card my-4">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-warning shadow-warning border-radius-lg pt-4 pb-3">
-                        <h6 class="text-white text-capitalize ps-3">Detail Periode Kelulusan</h6>
+    <div class="space-y-6">
+        <div class="glass-panel p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <h2 class="font-display font-bold text-xl text-white tracking-wide">Detail Periode Kelulusan</h2>
+                <p class="text-xs text-slate-400 mt-1">Informasi lengkap periode dan kelas terkait.</p>
+            </div>
+            <div class="flex flex-wrap gap-3 justify-end">
+                <a href="{{ route('admin.graduation-periods.edit', $period) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-500/10 px-4 py-2.5 text-xs font-semibold text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/15 transition">
+                    <span class="material-icons-round text-sm">edit</span>
+                    <span>Edit</span>
+                </a>
+                <button type="button" onclick="confirmDelete('{{ $period->id }}')" class="inline-flex items-center gap-2 rounded-xl bg-rose-500/10 px-4 py-2.5 text-xs font-semibold text-rose-300 border border-rose-500/20 hover:bg-rose-500/15 transition">
+                    <span class="material-icons-round text-sm">delete</span>
+                    <span>Hapus</span>
+                </button>
+                <form action="{{ route('admin.graduation-periods.destroy', $period) }}" method="POST" id="delete-form-{{ $period->id }}" class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            </div>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="glass-panel rounded-2xl shadow-xl p-6 grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Tahun Ajaran</p>
+                        <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $period->tahun_ajaran }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Semester</p>
+                        <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $period->semester }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Tanggal Pengumuman</p>
+                        <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $period->tanggal_pengumuman->format('d F Y') }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Status</p>
+                        <span class="mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold tracking-wide {{ $period->is_active ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-300 border border-white/10' }}">{{ $period->is_active ? 'Aktif' : 'Tidak Aktif' }}</span>
                     </div>
                 </div>
-                <div class="card-body px-4 pb-2">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="list-group-item">
-                                <h6 class="mb-0 text-sm text-secondary">Tahun Ajaran</h6>
-                                <h6 class="mb-0">{{ $period->tahun_ajaran }}</h6>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Semester</h6>
-                                <h6 class="mb-0">{{ $period->semester }}</h6>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Tanggal Pengumuman</h6>
-                                <h6 class="mb-0">{{ $period->tanggal_pengumuman->format('d F Y') }}</h6>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="list-group-item">
-                                <h6 class="mb-0 text-sm text-secondary">Status</h6>
-                                <span class="badge badge-sm bg-gradient-{{ $period->is_active ? 'success' : 'secondary' }}">
-                                    {{ $period->is_active ? 'Aktif' : 'Tidak Aktif' }}
-                                </span>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Jumlah Kelas</h6>
-                                <h6 class="mb-0">{{ $period->schoolClasses->count() }} Kelas</h6>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Jumlah Siswa</h6>
-                                <h6 class="mb-0">{{ $period->students->count() }} Siswa</h6>
-                            </div>
-                        </div>
-                    </div>
 
-                    @if($period->keterangan)
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="list-group-item">
-                                <h6 class="mb-0 text-sm text-secondary">Keterangan</h6>
-                                <p class="text-sm mb-0">{{ $period->keterangan }}</p>
-                            </div>
-                        </div>
+                <div class="glass-panel rounded-2xl shadow-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-sm text-white">Daftar Kelas</h3>
                     </div>
-                    @endif
-
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <h6 class="mb-3">Daftar Kelas</h6>
-                            <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Kelas</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Jurusan</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Wali Kelas</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Jumlah Siswa</th>
-                                            <th class="text-secondary opacity-7"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($period->schoolClasses as $class)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{ $class->nama_kelas }}</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $class->jurusan }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $class->wali_kelas }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ $class->students->count() }} Siswa</p>
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('admin.school-classes.show', $class) }}" class="text-secondary font-weight-bold text-xs">
-                                                    Detail
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center">Tidak ada kelas untuk periode ini</td>
-                                        </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <a href="{{ route('admin.graduation-periods.edit', $period) }}" class="btn bg-gradient-warning">Edit</a>
-                            <form action="{{ route('admin.graduation-periods.destroy', $period) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn bg-gradient-danger btn-delete">Hapus</button>
-                            </form>
-                            <a href="{{ route('admin.graduation-periods.index') }}" class="btn bg-gradient-secondary">Kembali</a>
-                        </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/5 bg-slate-900/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                    <th class="py-3.5 px-6">Nama Kelas</th>
+                                    <th class="py-3.5 px-6">Jurusan</th>
+                                    <th class="py-3.5 px-6">Wali Kelas</th>
+                                    <th class="py-3.5 px-6 text-center">Siswa</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5 text-sm">
+                                @forelse($period->schoolClasses as $class)
+                                    <tr class="hover:bg-white/[0.01] transition-colors">
+                                        <td class="py-4 px-6 font-medium text-slate-200">{{ $class->nama_kelas }}</td>
+                                        <td class="py-4 px-6 text-slate-400">{{ $class->jurusan }}</td>
+                                        <td class="py-4 px-6 text-slate-400">{{ $class->wali_kelas }}</td>
+                                        <td class="py-4 px-6 text-center text-slate-400">{{ $class->students->count() }} siswa</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="py-12 text-center text-sm text-slate-500">Tidak ada kelas untuk periode ini.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl shadow-xl p-6 space-y-4">
+                <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                    <p class="text-xs uppercase tracking-wide text-slate-400">Jumlah Kelas</p>
+                    <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $period->schoolClasses->count() }} kelas</p>
+                </div>
+                <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                    <p class="text-xs uppercase tracking-wide text-slate-400">Jumlah Siswa</p>
+                    <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $period->students->count() }} siswa</p>
+                </div>
+                <a href="{{ route('admin.graduation-periods.index') }}" class="block w-full rounded-xl bg-slate-800 border border-white/10 px-4 py-3 text-center text-xs font-semibold text-slate-300 hover:bg-slate-700 transition">Kembali ke Daftar</a>
             </div>
         </div>
     </div>
 
-    @push('scripts')
+    @push('custom_js')
     <script>
-        // SweetAlert Delete Confirmation
-        $('.btn-delete').click(function(e) {
-            e.preventDefault();
-            var form = $(this).closest('form');
+        function confirmDelete(id) {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data periode kelulusan akan dihapus secara permanen!",
+                title: 'Hapus Periode Kelulusan?',
+                text: 'Periode akan dihapus permanen bersama data terkait.',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
+                background: '#0F1322',
+                color: '#f1f5f9',
+                confirmButtonColor: '#f43f5e',
+                cancelButtonColor: '#334155',
+                confirmButtonText: 'Ya, Hapus',
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+                    document.getElementById('delete-form-' + id).submit();
                 }
-            })
-        });
+            });
+        }
     </script>
     @endpush
 </x-layouts.admin-layout>

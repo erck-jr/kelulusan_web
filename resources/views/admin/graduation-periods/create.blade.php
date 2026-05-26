@@ -1,98 +1,68 @@
 @section('title', 'Tambah Periode Kelulusan')
 
 @section('breadcrumbs')
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.graduation-periods.index') }}">Daftar Periode Kelulusan</a></li>
-<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tambah Periode</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.graduation-periods.index') }}">Daftar Periode Kelulusan</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li class="text-xs text-slate-400">Tambah Periode</li>
 @endsection
 
 <x-layouts.admin-layout>
-    <div class="card">
-        <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-warning shadow-warning text-center border-radius-xl mt-n4 position-absolute">
-                <span class="material-icons-round font25 mt-2 text-white opacity-10">event_available</span>
-            </div>
-            <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Tambah Periode Kelulusan</p>
-                <h4 class="mb-0">Form Input Data</h4>
-            </div>
+    <div class="space-y-6">
+        <div class="glass-panel rounded-2xl shadow-xl p-6">
+            <h2 class="font-display font-bold text-xl text-white tracking-wide">Tambah Periode Kelulusan</h2>
+            <p class="text-xs text-slate-400 mt-1">Tambahkan periode baru untuk pengumuman kelulusan.</p>
         </div>
-        <div class="card-body">
-            <form action="{{ route('admin.graduation-periods.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Tahun Ajaran</label>
-                            <input type="text" name="tahun_ajaran" class="form-control @error('tahun_ajaran') is-invalid @enderror" value="{{ old('tahun_ajaran') }}">
-                            @error('tahun_ajaran')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+
+        <div class="glass-panel rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+                <form action="{{ route('admin.graduation-periods.store') }}" method="POST" class="space-y-6">
+                    @csrf
+                    <div class="grid gap-6 lg:grid-cols-2">
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Tahun Ajaran</label>
+                            <input type="text" name="tahun_ajaran" value="{{ old('tahun_ajaran') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition" />
+                            @error('tahun_ajaran')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group input-group-static mb-4">
-                            <label for="semester" class="ms-0">Semester</label>
-                            <select class="form-control @error('semester') is-invalid @enderror" name="semester" id="semester">
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Semester</label>
+                            <select name="semester" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition">
                                 <option value="">Pilih Semester</option>
                                 <option value="Ganjil" {{ old('semester') == 'Ganjil' ? 'selected' : '' }}>Ganjil</option>
                                 <option value="Genap" {{ old('semester') == 'Genap' ? 'selected' : '' }}>Genap</option>
                             </select>
-                            @error('semester')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            @error('semester')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Tanggal Pengumuman</label>
+                            <input type="date" name="tanggal_pengumuman" value="{{ old('tanggal_pengumuman') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition" />
+                            @error('tanggal_pengumuman')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Jam Pengumuman</label>
+                            <input type="time" name="jam_pengumuman" value="{{ old('jam_pengumuman') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition" />
+                            @error('jam_pengumuman')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2 lg:col-span-2">
+                            <label class="flex items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm text-slate-200">
+                                <input type="checkbox" name="is_active" value="1" class="h-4 w-4 text-amber-500 focus:ring-amber-500" {{ old('is_active') ? 'checked' : '' }} />
+                                <span>Aktifkan periode ini</span>
+                            </label>
+                            @error('is_active')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2 lg:col-span-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Keterangan (opsional)</label>
+                            <textarea name="keterangan" rows="4" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition" placeholder="Keterangan tambahan...">{{ old('keterangan') }}</textarea>
+                            @error('keterangan')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="input-group input-group-static mb-4">
-                            <label class="ms-0">Tanggal Pengumuman</label>
-                            <input type="date" name="tanggal_pengumuman" class="form-control @error('tanggal_pengumuman') is-invalid @enderror" value="{{ old('tanggal_pengumuman') }}">
-                            @error('tanggal_pengumuman')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <div class="flex flex-wrap gap-3 justify-end">
+                        <a href="{{ route('admin.graduation-periods.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 border border-white/10 text-slate-300 text-xs font-semibold transition hover:bg-slate-700">Batal</a>
+                        <button type="submit" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold transition shadow-md">Simpan Periode</button>
                     </div>
-                    <div class="col-md-4">
-                        <div class="input-group input-group-static mb-4">
-                            <label class="ms-0">Jam Pengumuman</label>
-                            <input type="time" name="jam_pengumuman" class="form-control @error('jam_pengumuman') is-invalid @enderror" value="{{ old('jam_pengumuman') }}">
-                            @error('jam_pengumuman')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check form-switch mb-4 mt-4">
-                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" {{ old('is_active') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_active">Aktifkan Periode Ini</label>
-                            @error('is_active')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group input-group-outline mb-4">
-                            <textarea class="form-control @error('keterangan') is-invalid @enderror" rows="4" name="keterangan" placeholder="Keterangan (opsional)">{{ old('keterangan') }}</textarea>
-                            @error('keterangan')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn bg-gradient-warning">Simpan</button>
-                        <a href="{{ route('admin.graduation-periods.index') }}" class="btn bg-gradient-secondary">Batal</a>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </x-layouts.admin-layout>

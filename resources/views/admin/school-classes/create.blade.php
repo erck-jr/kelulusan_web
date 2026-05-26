@@ -1,93 +1,67 @@
 @section('title', 'Tambah Kelas')
 
 @section('breadcrumbs')
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.school-classes.index') }}">Daftar Kelas</a></li>
-<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tambah Kelas</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.school-classes.index') }}">Daftar Kelas</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li class="text-xs text-slate-400">Tambah Kelas</li>
 @endsection
 
 <x-layouts.admin-layout>
-    <div class="card">
-        <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-                <span class="material-icons-round font25 mt-2 text-white opacity-10">add_home</span>
-            </div>
-            <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Tambah Kelas Baru</p>
-                <h4 class="mb-0">Form Input Data</h4>
+    <div class="space-y-6">
+        <div class="glass-panel rounded-2xl shadow-xl p-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-display font-bold text-xl text-white tracking-wide">Tambah Kelas Baru</h2>
+                    <p class="text-xs text-slate-400 mt-1">Masukkan informasi kelas untuk periode aktif.</p>
+                </div>
             </div>
         </div>
-        <div class="card-body">
-            <form action="{{ route('admin.school-classes.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Nama Kelas</label>
-                            <input type="text" name="nama_kelas" class="form-control @error('nama_kelas') is-invalid @enderror" value="{{ old('nama_kelas') }}">
-                            @error('nama_kelas')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Jurusan</label>
-                            <input type="text" name="jurusan" class="form-control @error('jurusan') is-invalid @enderror" value="{{ old('jurusan') }}">
-                            @error('jurusan')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Tingkat</label>
-                            <input type="text" name="tingkat" class="form-control @error('tingkat') is-invalid @enderror" value="{{ old('tingkat') }}">
-                            @error('tingkat')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+        <div class="glass-panel rounded-2xl shadow-xl overflow-hidden">
+            <div class="p-6">
+                <form action="{{ route('admin.school-classes.store') }}" method="POST" class="space-y-6">
+                    @csrf
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Nama Kelas</label>
+                            <input type="text" name="nama_kelas" value="{{ old('nama_kelas') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition" />
+                            @error('nama_kelas')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Wali Kelas</label>
-                            <input type="text" name="wali_kelas" class="form-control @error('wali_kelas') is-invalid @enderror" value="{{ old('wali_kelas') }}">
-                            @error('wali_kelas')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Jurusan</label>
+                            <input type="text" name="jurusan" value="{{ old('jurusan') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition" />
+                            @error('jurusan')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group input-group-static mb-4">
-                            <label for="graduation_period_id" class="ms-0">Periode Kelulusan</label>
-                            <select class="form-control @error('graduation_period_id') is-invalid @enderror" name="graduation_period_id" id="graduation_period_id">
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Tingkat</label>
+                            <input type="text" name="tingkat" value="{{ old('tingkat') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition" />
+                            @error('tingkat')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Wali Kelas</label>
+                            <input type="text" name="wali_kelas" value="{{ old('wali_kelas') }}" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition" />
+                            @error('wali_kelas')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-xs font-semibold uppercase tracking-wide text-slate-400">Periode Kelulusan</label>
+                            <select name="graduation_period_id" class="w-full rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition">
                                 <option value="">Pilih Periode</option>
                                 @foreach($periods as $period)
-                                <option value="{{ $period->id }}" {{ old('graduation_period_id') == $period->id ? 'selected' : '' }}>
-                                    {{ $period->tahun_ajaran }} - {{ $period->semester }}
-                                </option>
+                                    <option value="{{ $period->id }}" {{ old('graduation_period_id') == $period->id ? 'selected' : '' }}>{{ $period->tahun_ajaran }} - {{ $period->semester }}</option>
                                 @endforeach
                             </select>
-                            @error('graduation_period_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            @error('graduation_period_id')<p class="text-xs text-rose-400">{{ $message }}</p>@enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn bg-gradient-success">Simpan</button>
-                        <a href="{{ route('admin.school-classes.index') }}" class="btn bg-gradient-secondary">Batal</a>
+                    <div class="flex flex-wrap gap-3 justify-end">
+                        <a href="{{ route('admin.school-classes.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 border border-white/10 text-slate-300 text-xs font-semibold transition hover:bg-slate-700">Batal</a>
+                        <button type="submit" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold transition shadow-md">Simpan Kelas</button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </x-layouts.admin-layout>

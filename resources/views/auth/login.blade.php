@@ -1,53 +1,72 @@
-@section('title','Login')
-
+@section('title', 'Login - ')
 <x-guest-layout>
-    <div class="row">
-        <div class="col-lg-4 col-md-8 col-12 mt-2 mx-auto">
-            <div class="card z-index-0 fadeIn3 fadeInBottom">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-1 pe-1">
-                        <h4 class="text-white font-weight-bolder text-center mt-2 mb-0 p-0">Login</h4>
-                        <p class="text-white p-0 text-center">Masuk ke Panel Admin</p>
-                    </div>
-                </div>
-                <div class="card-body p-2">
-                    <!-- Session Status -->
-                    <form role="form" class="text-start" method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <div class="input-group input-group-outline my-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus>
-                        </div>
-                        @error('email')
-                            <div class="text-danger text-xs">{{ $message }}</div>
-                        @enderror
-
-                        <div class="input-group input-group-outline mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        @error('password')
-                            <div class="text-danger text-xs">{{ $message }}</div>
-                        @enderror
-
-                        <div class="form-check form-switch d-flex align-items-center mb-3">
-                            <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
-                            <label class="form-check-label mb-0 ms-3" for="rememberMe">Ingat Saya</label>
-                        </div>
-
-                        <div class="text-center">
-                            <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Masuk</button>
-                        </div>
-                        @if (Route::has('password.request'))
-                            <p class="mt-4 text-sm text-center">
-                                <a href="{{ route('password.request') }}" class="text-primary text-gradient font-weight-bold">
-                                    Lupa Password?
-                                </a>
-                            </p>
-                        @endif
-                    </form>
-                </div>
+    <div class="w-full max-w-md mx-auto px-4 relative z-10">
+        <div class="glass p-6 sm:p-8 rounded-2xl sm:rounded-3xl shadow-2xl relative overflow-hidden">
+            
+            <div class="text-center mb-6">
+                <h4 class="font-display font-bold text-2xl text-white tracking-wide">Login Admin</h4>
+                <p class="text-xs text-slate-400 mt-1">Masuk ke panel pengelolaan kelulusan sekolah</p>
             </div>
+
+            @if (session('status'))
+                <div class="p-4 mb-4 text-xs rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('login', ['school_slug' => request()->route('school_slug')]) }}" class="space-y-4">
+                @csrf
+
+                <div class="space-y-1.5">
+                    <label for="email" class="text-xs font-semibold text-slate-300">Email Sekolah / Admin</label>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus
+                        placeholder="admin@sekolah.sch.id"
+                        class="w-full bg-slate-900/80 border @error('email') border-rose-500/50 focus:border-rose-500 @else border-white/10 focus:border-indigo-500 @enderror rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition-colors">
+                    
+                    @error('email')
+                        <span class="text-xs text-rose-400 block mt-1 font-medium">⚠️ {{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label for="password" class="text-xs font-semibold text-slate-300">Password</label>
+                    </div>
+                    <input type="password" name="password" id="password" required
+                        placeholder="••••••••"
+                        class="w-full bg-slate-900/80 border @error('password') border-rose-500/50 focus:border-rose-500 @else border-white/10 focus:border-indigo-500 @enderror rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition-colors">
+                    
+                    @error('password')
+                        <span class="text-xs text-rose-400 block mt-1 font-medium">⚠️ {{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="flex items-center justify-between pt-1">
+                    <label class="inline-flex items-center cursor-pointer group">
+                        <input type="checkbox" name="remember" id="rememberMe" 
+                            class="rounded bg-slate-900 border-white/10 text-indigo-600 focus:ring-0 focus:ring-offset-0 w-4 h-4 transition-colors cursor-pointer">
+                        <span class="ms-2 text-xs font-medium text-slate-400 group-hover:text-slate-300 transition-colors select-none">Ingat Saya</span>
+                    </label>
+
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request', ['school_slug' => request()->route('school_slug')]) }}" 
+                            class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
+                            Lupa Password?
+                        </a>
+                    @endif
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" 
+                        class="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition-all transform active:scale-[0.98] text-sm tracking-wide cursor-pointer flex justify-center items-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Masuk ke Dashboard</span>
+                    </button>
+                </div>
+            </form>
+            
         </div>
     </div>
 </x-guest-layout>

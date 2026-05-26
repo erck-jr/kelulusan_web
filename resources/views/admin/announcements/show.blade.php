@@ -1,95 +1,87 @@
 @section('title', 'Detil Pengumuman')
 
 @section('breadcrumbs')
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.announcements.index') }}">Pengumuman</a></li>
-<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Detil Pengumuman</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.announcements.index') }}">Data Pengumuman</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li class="text-xs text-slate-400">Detil Pengumuman</li>
 @endsection
 
 <x-layouts.admin-layout>
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card my-4">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center">
-                        <h6 class="text-white text-capitalize ps-3">Detail Pengumuman</h6>
-                        <div class="mx-3">
-                            <a href="{{ route('admin.announcements.edit', $announcement) }}" class="btn btn-sm btn-info">
-                                <i class="material-icons-round text-sm">edit</i>
-                                Edit
-                            </a>
-                            <form action="{{ route('admin.announcements.destroy', $announcement) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">
-                                    <i class="material-icons-round text-sm">delete</i>
-                                    Hapus
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+    <div class="space-y-6">
+        <div class="glass-panel p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <h2 class="font-display font-bold text-xl text-white tracking-wide">Detil Pengumuman</h2>
+                <p class="text-xs text-slate-400 mt-1">Lihat status dan detail publikasi pengumuman.</p>
+            </div>
+            <div class="flex flex-wrap gap-3 justify-end">
+                <a href="{{ route('admin.announcements.edit', $announcement) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-500/10 px-4 py-2.5 text-xs font-semibold text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/15 transition">
+                    <span class="material-icons-round text-sm">edit</span>
+                    <span>Edit</span>
+                </a>
+                <button type="button" onclick="confirmDelete('{{ $announcement->id }}')" class="inline-flex items-center gap-2 rounded-xl bg-rose-500/10 px-4 py-2.5 text-xs font-semibold text-rose-300 border border-rose-500/20 hover:bg-rose-500/15 transition">
+                    <span class="material-icons-round text-sm">delete</span>
+                    <span>Hapus</span>
+                </button>
+                <form action="{{ route('admin.announcements.destroy', $announcement) }}" method="POST" id="delete-form-{{ $announcement->id }}" class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            </div>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+            <div class="lg:col-span-2 glass-panel rounded-2xl shadow-xl p-6 space-y-4">
+                <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                    <h3 class="font-semibold text-lg text-white">{{ $announcement->title }}</h3>
+                    <p class="text-xs text-slate-400 mt-2">{{ $announcement->published_at ? $announcement->published_at->format('d/m/Y H:i') : 'Belum ditentukan' }}</p>
+                    <div class="mt-4 text-slate-200 leading-relaxed whitespace-pre-line">{!! nl2br(e($announcement->content)) !!}</div>
                 </div>
-                <div class="card-body px-3 pb-2">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="mb-4">
-                                <h4>{{ $announcement->title }}</h4>
-                                <div class="text-sm text-muted mb-3">
-                                    Status:
-                                    @if($announcement->is_published)
-                                        <span class="badge badge-sm bg-gradient-success">Dipublikasi</span>
-                                    @else
-                                        <span class="badge badge-sm bg-gradient-secondary">Draft</span>
-                                    @endif
-                                    |
-                                    Tanggal Publikasi: {{ $announcement->published_at ? $announcement->published_at->format('d/m/Y H:i') : 'Belum ditentukan' }}
-                                </div>
-                                <div class="card">
-                                    <div class="card-body">
-                                        {!! nl2br(e($announcement->content)) !!}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between mt-4">
-                                <a href="{{ route('admin.announcements.index') }}" class="btn btn-light">
-                                    <i class="material-icons-round text-sm">arrow_back</i>
-                                    Kembali ke Daftar
-                                </a>
-
-                                @if(!$announcement->is_published)
-                                    <form action="{{ route('admin.announcements.publish', $announcement) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn bg-gradient-success">
-                                            <i class="material-icons-round text-sm">publish</i>
-                                            Publikasikan Sekarang
-                                        </button>
-                                    </form>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="card bg-gray-100">
-                                <div class="card-body">
-                                    <h6 class="mb-3">Informasi Pengumuman</h6>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item bg-transparent">
-                                            <strong>Dibuat pada:</strong><br>
-                                            {{ $announcement->created_at->format('d/m/Y H:i') }}
-                                        </li>
-                                        <li class="list-group-item bg-transparent">
-                                            <strong>Terakhir diperbarui:</strong><br>
-                                            {{ $announcement->updated_at->format('d/m/Y H:i') }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+            <div class="glass-panel rounded-2xl shadow-xl p-6">
+                <div class="space-y-4">
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500">Status</p>
+                        <span class="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide {{ $announcement->is_published ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20' : 'bg-slate-800 text-slate-300 border border-white/10' }}">{{ $announcement->is_published ? 'Dipublikasi' : 'Draft' }}</span>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500">Dibuat pada</p>
+                        <p class="mt-2 text-sm text-slate-200">{{ $announcement->created_at->format('d/m/Y H:i') }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500">Terakhir diperbarui</p>
+                        <p class="mt-2 text-sm text-slate-200">{{ $announcement->updated_at->format('d/m/Y H:i') }}</p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="flex flex-wrap gap-3 justify-end">
+            <a href="{{ route('admin.announcements.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-800 border border-white/10 text-slate-300 text-xs font-semibold transition hover:bg-slate-700">Kembali</a>
+        </div>
     </div>
-</div>
+
+    @push('custom_js')
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Hapus Pengumuman?',
+                text: 'Pengumuman akan dihapus permanen dari sistem.',
+                icon: 'warning',
+                showCancelButton: true,
+                background: '#0F1322',
+                color: '#f1f5f9',
+                confirmButtonColor: '#f43f5e',
+                cancelButtonColor: '#334155',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
+    </script>
+    @endpush
 </x-layouts.admin-layout>

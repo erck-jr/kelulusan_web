@@ -1,144 +1,126 @@
 @section('title', 'Detail Siswa')
 
 @section('breadcrumbs')
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-<li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ route('admin.students.index') }}">Daftar Siswa</a></li>
-<li class="breadcrumb-item text-sm text-dark active" aria-current="page">Detail Siswa</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li><a class="hover:text-slate-300 transition-colors" href="{{ route('admin.students.index') }}">Daftar Siswa</a></li>
+<li class="text-slate-600 select-none">/</li>
+<li class="text-xs text-slate-400">Detail Siswa</li>
 @endsection
 
 <x-layouts.admin-layout>
-    <div class="row">
-        <div class="col-12">
-            <div class="card my-4">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-info shadow-info border-radius-lg pt-4 pb-3">
-                        <h6 class="text-white text-capitalize ps-3">Detail Siswa</h6>
+    <div class="space-y-6">
+        <div class="glass-panel p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <h2 class="font-display font-bold text-xl text-white tracking-wide">Detail Siswa</h2>
+                <p class="text-xs text-slate-400 mt-1">Data lengkap siswa dan daftar nilai.</p>
+            </div>
+            <div class="flex flex-wrap gap-3 justify-end">
+                <a href="{{ route('admin.students.edit', $student) }}" class="inline-flex items-center gap-2 rounded-xl bg-indigo-500/10 px-4 py-2.5 text-xs font-semibold text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/15 transition">
+                    <span class="material-icons-round text-sm">edit</span>
+                    <span>Edit</span>
+                </a>
+                <button type="button" onclick="confirmDelete('{{ $student->id }}')" class="inline-flex items-center gap-2 rounded-xl bg-rose-500/10 px-4 py-2.5 text-xs font-semibold text-rose-300 border border-rose-500/20 hover:bg-rose-500/15 transition">
+                    <span class="material-icons-round text-sm">delete</span>
+                    <span>Hapus</span>
+                </button>
+                <form action="{{ route('admin.students.destroy', $student) }}" method="POST" id="delete-form-{{ $student->id }}" class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            </div>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="glass-panel rounded-2xl shadow-xl p-6 grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">NIS</p>
+                        <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $student->nis }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Nama Lengkap</p>
+                        <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $student->nama }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Kelas</p>
+                        <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $student->schoolClass->nama_kelas }} - {{ $student->schoolClass->jurusan }}</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Periode Kelulusan</p>
+                        <p class="mt-2 text-sm text-slate-200 font-semibold">{{ $student->graduationPeriod->tahun_ajaran }} - {{ $student->graduationPeriod->semester }}</p>
                     </div>
                 </div>
-                <div class="card-body px-4 pb-2">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="list-group-item">
-                                <h6 class="mb-0 text-sm text-secondary">NIS</h6>
-                                <h6 class="mb-0">{{ $student->nis }}</h6>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Nama Lengkap</h6>
-                                <h6 class="mb-0">{{ $student->nama }}</h6>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Kelas</h6>
-                                <h6 class="mb-0">{{ $student->schoolClass->nama_kelas }} - {{ $student->schoolClass->jurusan }}</h6>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="list-group-item">
-                                <h6 class="mb-0 text-sm text-secondary">Status</h6>
-                                <span class="badge badge-sm bg-gradient-{{ $student->status === 'LULUS' ? 'success' : 'danger' }}">{{ $student->status }}</span>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Nilai Rata-rata</h6>
-                                <h6 class="mb-0">{{ number_format($student->nilai_rata_rata, 2) }}</h6>
-                            </div>
-                            <div class="list-group-item mt-3">
-                                <h6 class="mb-0 text-sm text-secondary">Periode Kelulusan</h6>
-                                <h6 class="mb-0">{{ $student->graduationPeriod->tahun_ajaran }} - {{ $student->graduationPeriod->semester }}</h6>
-                            </div>
-                        </div>
-                    </div>
 
-                    @if($student->catatan)
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="list-group-item">
-                                <h6 class="mb-0 text-sm text-secondary">Catatan</h6>
-                                <p class="text-sm mb-0">{{ $student->catatan }}</p>
-                            </div>
-                        </div>
+                <div class="glass-panel rounded-2xl shadow-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-sm text-white">Daftar Nilai</h3>
                     </div>
-                    @endif
-
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <h6 class="mb-3">Daftar Nilai</h6>
-                            <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mata Pelajaran</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nilai Ujian</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nilai Sekolah</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nilai Akhir</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($student->grades as $grade)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{ $grade->mata_pelajaran }}</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ number_format($grade->nilai_ujian, 2) }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ number_format($grade->nilai_sekolah, 2) }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">{{ number_format($grade->nilai_akhir, 2) }}</p>
-                                            </td>
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center">Belum ada nilai</td>
-                                        </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <a href="{{ route('admin.students.edit', $student) }}" class="btn bg-gradient-info">Edit</a>
-                            <form action="{{ route('admin.students.destroy', $student) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn bg-gradient-danger btn-delete">Hapus</button>
-                            </form>
-                            <a href="{{ route('admin.students.index') }}" class="btn bg-gradient-secondary">Kembali</a>
-                        </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/5 bg-slate-900/40 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                    <th class="py-3.5 px-6">Mata Pelajaran</th>
+                                    <th class="py-3.5 px-6">Nilai Ujian</th>
+                                    <th class="py-3.5 px-6">Nilai Sekolah</th>
+                                    <th class="py-3.5 px-6">Nilai Akhir</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5 text-sm">
+                                @forelse($student->grades as $grade)
+                                    <tr class="hover:bg-white/[0.01] transition-colors">
+                                        <td class="py-4 px-6 font-medium text-slate-200">{{ $grade->mata_pelajaran }}</td>
+                                        <td class="py-4 px-6 text-slate-400">{{ number_format($grade->nilai_ujian, 2) }}</td>
+                                        <td class="py-4 px-6 text-slate-400">{{ number_format($grade->nilai_sekolah, 2) }}</td>
+                                        <td class="py-4 px-6 text-slate-400">{{ number_format($grade->nilai_akhir, 2) }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="py-12 text-center text-sm text-slate-500">Belum ada nilai</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl shadow-xl p-6 space-y-4">
+                <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                    <p class="text-xs uppercase tracking-wide text-slate-400">Status</p>
+                    <span class="mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold tracking-wide {{ $student->status === 'LULUS' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20' }}">{{ $student->status }}</span>
+                </div>
+                @if($student->catatan)
+                    <div class="rounded-2xl bg-slate-950/60 border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wide text-slate-400">Catatan</p>
+                        <p class="mt-2 text-sm text-slate-200">{{ $student->catatan }}</p>
+                    </div>
+                @endif
+                <a href="{{ route('admin.students.index') }}" class="block w-full rounded-xl bg-slate-800 border border-white/10 px-4 py-3 text-center text-xs font-semibold text-slate-300 hover:bg-slate-700 transition">Kembali ke Daftar</a>
             </div>
         </div>
     </div>
 
-    @push('scripts')
+    @push('custom_js')
     <script>
-        // SweetAlert Delete Confirmation
-        $('.btn-delete').click(function(e) {
-            e.preventDefault();
-            var form = $(this).closest('form');
+        function confirmDelete(id) {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data siswa akan dihapus secara permanen!",
+                title: 'Hapus Data Siswa?',
+                text: 'Seluruh riwayat nilai siswa akan terhapus permanen dari peladen server!',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
+                background: '#0F1322',
+                color: '#f1f5f9',
+                confirmButtonColor: '#f43f5e',
+                cancelButtonColor: '#334155',
+                confirmButtonText: 'Ya, Hapus Permanen',
+                cancelButtonText: 'Batalkan'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+                    document.getElementById('delete-form-' + id).submit();
                 }
-            })
-        });
+            });
+        }
     </script>
     @endpush
 </x-layouts.admin-layout>

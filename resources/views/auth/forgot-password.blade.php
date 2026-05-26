@@ -1,40 +1,27 @@
 @section('title', 'Lupa Password')
 <x-guest-layout>
-    <div class="row">
-        <div class="col-lg-4 col-md-8 col-12 mx-auto">
-            <div class="card z-index-0 fadeIn3 fadeInBottom">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                        <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Lupa Password</h4>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="text-center text-muted mb-4">
-                        <p>Masukkan alamat email Anda. Kami akan mengirimkan link untuk mereset password Anda.</p>
-                    </div>
-                    <form role="form" class="text-start" method="POST" action="{{ route('password.email') }}">
-                        @csrf
-                        <div class="input-group input-group-outline mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus>
-                        </div>
-                        @error('email')
-                            <div class="text-danger text-xs mb-3">{{ $message }}</div>
-                        @enderror
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md">
+            <div class="glass-panel rounded-2xl p-6 shadow-lg">
+                <h4 class="text-lg font-semibold text-white text-center">Lupa Password</h4>
+                <p class="text-sm text-slate-400 text-center mt-2">Masukkan alamat email Anda. Kami akan mengirimkan link untuk mereset password Anda.</p>
 
-                        <div class="text-center">
-                            <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">
-                                Kirim Link Reset Password
-                            </button>
-                        </div>
+                <form method="POST" action="{{ route('password.email') }}" class="mt-4 space-y-4">
+                    @csrf
+                    <div>
+                        <label class="text-xs text-slate-400">Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required autofocus class="w-full mt-1 rounded-2xl bg-slate-950/50 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:ring-2 focus:ring-indigo-500/20" />
+                        @error('email')<p class="text-xs text-rose-400 mt-1">{{ $message }}</p>@enderror
+                    </div>
 
-                        <p class="mt-4 text-sm text-center">
-                            <a href="{{ route('login') }}" class="text-primary text-gradient font-weight-bold">
-                                Kembali ke Login
-                            </a>
-                        </p>
-                    </form>
-                </div>
+                    <div>
+                        <button type="submit" class="w-full rounded-xl px-4 py-2 bg-indigo-600 text-white font-semibold">Kirim Link Reset Password</button>
+                    </div>
+                </form>
+
+                <p class="mt-4 text-sm text-center text-slate-400">
+                    <a href="{{ route('login', ['school_slug' => request()->route('school_slug')]) }}" class="text-indigo-400 font-semibold">Kembali ke Login</a>
+                </p>
             </div>
         </div>
     </div>

@@ -60,6 +60,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // Graduation Periods
     Route::resource('graduation-periods', GraduationPeriodController::class);
+
+
+    // Certificate Regeneration
+    Route::get('regenerate-certificates', [SettingController::class, 'regenerateCertificates'])->name('settings.regenerate-certificates');
+
 });
 
 // Override the default Breeze dashboard redirect
