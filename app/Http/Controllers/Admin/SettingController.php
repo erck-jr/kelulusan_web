@@ -48,18 +48,13 @@ class SettingController extends Controller
                 'updated_at' => now()
             ]);
         }
-
-        Cache::forget('settings');
-
-        return redirect()->route('admin.settings.index')
-            ->with('success', 'Pengaturan berhasil disimpan.');
-
-        Cache::forget('settings');
-
-        return redirect()
-            ->route('admin.settings.index')
-            ->with('success', 'Pengaturan berhasil diperbarui.');
-    }
+ 
+         Cache::forget('settings');
+         Cache::forget('app_settings_standalone');
+ 
+         return redirect()->route('admin.settings.index')
+             ->with('success', 'Pengaturan berhasil disimpan.');
+     }
 
     public function previewCertificate()
     {

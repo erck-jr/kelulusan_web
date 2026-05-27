@@ -1,1 +1,11 @@
 @import 'tailwindcss/index.css';
+
+@theme {
+  --color-school-primary: var(--school-primary, #6366f1);
+  --color-school-accent: var(--school-accent, #8b5cf6);
+  --color-school-bg: var(--school-bg, #0b0f19);
+  --color-school-bg-panel: var(--school-bg-panel, rgba(15, 23, 42, 0.45));
+  --color-school-border: var(--school-border, rgba(255, 255, 255, 0.06));
+}
+
+@variant dark (&:where(.dark, .dark *));
