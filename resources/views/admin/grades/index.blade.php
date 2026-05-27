@@ -8,6 +8,22 @@
 
 <x-layouts.admin-layout>
     <div class="space-y-6">
+        @if($errors->any())
+            <div class="glass-panel p-4 rounded-xl border border-rose-500/20 bg-rose-500/10">
+                <div class="flex items-start gap-3">
+                    <span class="material-icons-round text-rose-400 mt-0.5">error_outline</span>
+                    <div>
+                        <h3 class="text-sm font-bold text-rose-400">Import Gagal! Ditemukan Kesalahan Data:</h3>
+                        <ul class="mt-2 text-xs text-rose-300 list-disc list-inside space-y-1">
+                            @foreach($errors->all() as $error)
+                                <li>{!! $error !!}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="glass-panel p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
@@ -85,7 +101,7 @@
 
             @if($grades->hasPages())
                 <div class="p-4 border-t border-white/5 bg-slate-900/20 custom-pagination">
-                    {{ $grades->links('pagination::bootstrap-5') }}
+                    {{ $grades->links('pagination::tailwind') }}
                 </div>
             @endif
         </div>
@@ -102,6 +118,17 @@
                     <span class="material-icons-round text-lg">close</span>
                 </button>
             </div>
+            
+            <div class="mb-5 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                <div class="flex items-start gap-3">
+                    <span class="material-icons-round text-amber-400 text-lg mt-0.5">warning</span>
+                    <div class="text-xs text-amber-300 space-y-2">
+                        <p><strong class="font-bold text-amber-400">Penting:</strong> Harap pastikan nilai untuk setiap mata pelajaran dipisahkan ke dalam file excel tersendiri (satu file per mata pelajaran).</p>
+                        <p>Sistem memvalidasi berdasarkan <strong class="font-bold text-amber-400">Nama Mata Pelajaran</strong>. Jika nama mata pelajaran berbeda (meskipun karena salah ketik), sistem akan menganggapnya sebagai mata pelajaran baru.</p>
+                    </div>
+                </div>
+            </div>
+
             <form action="{{ route('admin.grades.import') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                 @csrf
                 <a href="{{ route('admin.grades.template') }}" class="inline-flex items-center justify-center gap-2 w-full rounded-xl bg-slate-800 border border-white/10 px-4 py-3 text-xs font-semibold text-slate-300 hover:bg-slate-700 transition">

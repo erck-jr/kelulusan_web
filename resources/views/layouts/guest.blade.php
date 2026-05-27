@@ -48,6 +48,7 @@
         }
         .glass-panel {
             background: var(--school-bg-panel);
+            background-repeat: repeat;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--school-border);

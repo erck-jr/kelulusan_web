@@ -157,7 +157,7 @@ class GradeController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls'
+            'file' => 'required|mimes:xlsx,xls,csv'
         ]);
 
         $file = $request->file('file');
@@ -166,48 +166,102 @@ class GradeController extends Controller
         $rows = $sheet->toArray(null, true, true, true);
 
         $errors = [];
-        $grades = [];
+        $validData = [];
+        $affectedStudentIds = [];
 
         foreach ($rows as $index => $row) {
             if ($index == 1) continue; // skip header
 
-            $nis            = trim($row['A']);
-            $mataPelajaran  = trim($row['B']);
-            $nilaiUjian     = $row['C'];
-            $nilaiSekolah   = $row['D'];
-            $nilaiAkhir     = $row['E'];
-            $catatan        = $row['F'] ?? null;
+            $nis            = trim($row['A'] ?? '');
+            $mataPelajaran  = trim($row['B'] ?? '');
+            $nilaiUjian     = isset($row['C']) ? trim($row['C']) : null;
+            $nilaiSekolah   = isset($row['D']) ? trim($row['D']) : null;
+            $nilaiAkhir     = isset($row['E']) ? trim($row['E']) : null;
+            $catatan        = isset($row['F']) ? trim($row['F']) : null;
 
             // skip baris kosong
             if (empty($nis) && empty($mataPelajaran)) continue;
 
+            $hasRowError = false;
+
+            if (empty($nis)) {
+                $errors[] = "Baris {$index} Kolom A (NISN) kosong.";
+                $hasRowError = true;
+            }
+            if (empty($mataPelajaran)) {
+                $errors[] = "Baris {$index} Kolom B (Mata Pelajaran) kosong.";
+                $hasRowError = true;
+            }
+
+            if ($hasRowError) continue; // skip to next row since NIS/Mapel is required to do further checks
+
             // validasi nis
             $student = Student::where('nis', $nis)->first();
             if (!$student) {
-                $errors[] = "Baris {$index} → NIS <b>{$nis}</b> tidak ditemukan";
-                continue;
+                $errors[] = "Baris {$index} Kolom A &rarr; NIS <b>{$nis}</b> tidak ditemukan di database.";
+                $hasRowError = true;
             }
 
-            $grades[] = [
-                'student_id'     => $student->id,
-                'mata_pelajaran' => $mataPelajaran,
-                'nilai_ujian'    => $nilaiUjian,
-                'nilai_sekolah'  => $nilaiSekolah,
-                'nilai_akhir'    => $nilaiAkhir,
-                'catatan'        => $catatan,
-                'created_at'     => now(),
-                'updated_at'     => now(),
-            ];
+            // validasi nilai (harus angka jika diisi)
+            if ($nilaiUjian !== null && $nilaiUjian !== '' && !is_numeric($nilaiUjian)) {
+                $errors[] = "Baris {$index} Kolom C (Nilai Ujian) harus berupa angka.";
+                $hasRowError = true;
+            }
+            if ($nilaiSekolah !== null && $nilaiSekolah !== '' && !is_numeric($nilaiSekolah)) {
+                $errors[] = "Baris {$index} Kolom D (Nilai Sekolah) harus berupa angka.";
+                $hasRowError = true;
+            }
+            if ($nilaiAkhir === null || $nilaiAkhir === '' || !is_numeric($nilaiAkhir)) {
+                $errors[] = "Baris {$index} Kolom E (Nilai Akhir) kosong atau bukan angka (wajib diisi).";
+                $hasRowError = true;
+            }
+
+            if (!$hasRowError) {
+                $validData[] = [
+                    'student_id'     => $student->id,
+                    'mata_pelajaran' => $mataPelajaran,
+                    'nilai_ujian'    => $nilaiUjian !== '' ? $nilaiUjian : null,
+                    'nilai_sekolah'  => $nilaiSekolah !== '' ? $nilaiSekolah : null,
+                    'nilai_akhir'    => $nilaiAkhir,
+                    'catatan'        => $catatan,
+                ];
+                $affectedStudentIds[$student->id] = $student->id;
+            }
         }
 
-        // kalau ada error, batalkan semua
+        // kalau ada error, batalkan semua (all in or nothing)
         if (!empty($errors)) {
             return redirect()->back()->withErrors($errors);
         }
 
         // kalau aman, simpan dalam transaction
-        DB::transaction(function () use ($grades) {
-            Grade::insert($grades);
+        DB::transaction(function () use ($validData, $affectedStudentIds) {
+            foreach ($validData as $data) {
+                // Cari berdasarkan subject case-insensitive
+                $existing = Grade::where('student_id', $data['student_id'])
+                                 ->whereRaw('LOWER(mata_pelajaran) = ?', [strtolower($data['mata_pelajaran'])])
+                                 ->first();
+
+                if ($existing) {
+                    $existing->update([
+                        'nilai_ujian' => $data['nilai_ujian'],
+                        'nilai_sekolah' => $data['nilai_sekolah'],
+                        'nilai_akhir' => $data['nilai_akhir'],
+                        'catatan' => $data['catatan'],
+                    ]);
+                } else {
+                    Grade::create($data);
+                }
+            }
+
+            // Update nilai rata-rata siswa
+            foreach ($affectedStudentIds as $studentId) {
+                $student = Student::find($studentId);
+                if ($student) {
+                    $avgGrade = $student->grades()->avg('nilai_akhir');
+                    $student->update(['nilai_rata_rata' => $avgGrade]);
+                }
+            }
         });
 
         return redirect()->back()->with('success', 'Import nilai berhasil disimpan.');

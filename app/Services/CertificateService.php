@@ -51,13 +51,13 @@ class CertificateService
         };
 
         // ===== Tulis Nama Siswa =====
-        $pasteCenteredText($gambar, $nama_siswa, $font_size, $angle, 15, -75, $font_color, $font_path, $centerX, $centerY);
+        $pasteCenteredText($gambar, $nama_siswa, $font_size, $angle, 0, -75, $font_color, $font_path, $centerX, $centerY);
 
         // ===== Tulis NISN =====
-        $pasteCenteredText($gambar, "( " . strtoupper($nisn) . " )", $font_size, $angle, 10, 25, $font_color, $font_path, $centerX, $centerY);
+        $pasteCenteredText($gambar, "( " . strtoupper($nisn) . " )", $font_size, $angle, 0, 25, $font_color, $font_path, $centerX, $centerY);
 
         // ===== Tulis Status Kelulusan =====
-        $pasteCenteredText($gambar, "~ " . strtoupper($status_kelulusan) . " ~", $font_size + 25, $angle, -35, 155, $font_color, $font_path, $centerX, $centerY);
+        $pasteCenteredText($gambar, "~ " . strtoupper($status_kelulusan) . " ~", $font_size + 30, $angle, 0, 155, $font_color, $font_path, $centerX, $centerY);
 
         return $gambar;
     }
