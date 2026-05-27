@@ -46,7 +46,7 @@
                         </div>
                         <div class="space-y-1">
                             <dt class="text-slate-500 dark:text-slate-400">Kelas</dt>
-                            <dd class="text-slate-900 dark:text-white font-medium">{{ optional($student->schoolClass)->name ?? 'Tidak tersedia' }}</dd>
+                            <dd class="text-slate-900 dark:text-white font-medium">{{ optional($student->schoolClass)->nama_kelas ?? 'Tidak tersedia' }}</dd>
                         </div>
                     </dl>
 
@@ -133,9 +133,9 @@
                                 @foreach ($student->grades as $grade)
                                     <tr class="hover:bg-slate-100/50 dark:hover:bg-slate-800/80 transition-colors">
                                         <td class="px-4 py-4 text-slate-900 dark:text-white font-medium">{{ $grade->mata_pelajaran }}</td>
-                                        <td class="px-4 py-4">{{ $grade->nilai_sekolah ?? '-' }}</td>
-                                        <td class="px-4 py-4">{{ $grade->nilai_ujian ?? '-' }}</td>
-                                        <td class="px-4 py-4 font-semibold text-school-primary">{{ $grade->nilai_akhir ?? '-' }}</td>
+                                        <td class="px-4 py-4">{{ $grade->nilai_sekolah !== null ? number_format($grade->nilai_sekolah, 2) : '-' }}</td>
+                                        <td class="px-4 py-4">{{ $grade->nilai_ujian !== null ? number_format($grade->nilai_ujian, 2) : '-' }}</td>
+                                        <td class="px-4 py-4 font-semibold text-school-primary">{{ $grade->nilai_akhir !== null ? number_format($grade->nilai_akhir, 2) : '-' }}</td>
                                         <td class="px-4 py-4 text-slate-500 dark:text-slate-400">{{ $grade->catatan ?? '—' }}</td>
                                     </tr>
                                 @endforeach

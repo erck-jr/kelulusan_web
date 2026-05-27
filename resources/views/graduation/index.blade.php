@@ -46,7 +46,7 @@
             @elseif($activePeriod)
                 <div class="rounded-2xl bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 p-4 text-center">
                     <p class="text-sm text-slate-500 dark:text-slate-400">Pengumuman kelulusan akan dibuka pada:</p>
-                    <p class="text-sm text-slate-900 dark:text-white font-semibold mt-2">{{ $pengumumanDateTime->translatedFormat('d F Y, H:i') }} WIB</p>
+                    <p class="text-sm text-slate-900 dark:text-white font-semibold mt-2">{{ $pengumumanDateTime->translatedFormat('d F Y, H:i') }} WIT</p>
                 </div>
             @else
                 <div class="rounded-2xl bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 p-4 text-center">

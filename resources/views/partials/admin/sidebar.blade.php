@@ -15,7 +15,7 @@
                         </svg>
                     @endif
                 </div>
-                <span class="font-display font-bold text-lg tracking-wide bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">GradSaaS</span>
+                <span class="font-display font-bold text-lg tracking-wide bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">{{ settings('school_name') }}</span>
             </a>
             
             <button class="lg:hidden text-slate-400 hover:text-white" onclick="document.getElementById('sidebar-main').classList.add('-translate-x-full')">

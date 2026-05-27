@@ -107,8 +107,9 @@
         </div>
     </div>
 
-    <div id="import-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div class="relative rounded-2xl bg-[#0F1322] border border-white/10 shadow-2xl max-w-2xl w-full p-6">
+    <div id="import-modal" class="fixed inset-0 z-50 hidden">
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="document.getElementById('import-modal').classList.add('hidden')">
+            <div class="relative rounded-2xl bg-[#0F1322] border border-white/10 shadow-2xl max-w-2xl w-full p-6" onclick="event.stopPropagation()">
             <div class="flex items-center justify-between border-b border-white/5 pb-4 mb-4">
                 <div>
                     <h3 class="font-display font-bold text-base text-white tracking-wide">Import Data Nilai</h3>
@@ -147,6 +148,7 @@
             </form>
         </div>
     </div>
+</div>
 
     @push('custom_js')
     <script>
