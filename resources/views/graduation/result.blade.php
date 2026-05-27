@@ -50,7 +50,7 @@
                         </div>
                     </dl>
 
-                    <div class="mt-6 rounded-3xl border border-slate-200 dark:border-slate-700/70 bg-white/40 dark:bg-slate-950/70 p-4">
+                    <div class="mt-6 rounded-3xl border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-950/70 p-4">
                         <p class="text-slate-500 dark:text-slate-400 text-sm">Status sertifikat</p>
                         @if (!empty($sertifikatPath))
                             <p class="mt-2 text-emerald-600 dark:text-emerald-300 font-semibold">Sertifikat sudah tersedia. Klik unduh untuk menyimpan file.</p>
@@ -118,9 +118,9 @@
                 </div>
 
                 @if ($student->grades->isNotEmpty())
-                    <div class="overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-700/70 bg-white/40 dark:bg-slate-950/80">
+                    <div class="overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-950/80">
                         <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-sm text-left text-slate-700 dark:text-slate-300">
-                            <thead class="bg-slate-100 dark:bg-slate-900/90 text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-550">
+                            <thead class="bg-slate-100 dark:bg-slate-900/90 text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
                                 <tr>
                                     <th class="px-4 py-4">Mata Pelajaran</th>
                                     <th class="px-4 py-4">Nilai Sekolah</th>
@@ -129,7 +129,7 @@
                                     <th class="px-4 py-4">Catatan</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-200 dark:divide-slate-700 bg-white/20 dark:bg-slate-900/80">
+                            <tbody class="divide-y divide-slate-200 dark:divide-slate-700 bg-white dark:bg-slate-900/80">
                                 @foreach ($student->grades as $grade)
                                     <tr class="hover:bg-slate-100/50 dark:hover:bg-slate-800/80 transition-colors">
                                         <td class="px-4 py-4 text-slate-900 dark:text-white font-medium">{{ $grade->mata_pelajaran }}</td>
@@ -143,7 +143,7 @@
                         </table>
                     </div>
                 @else
-                    <div class="rounded-3xl border border-slate-200 dark:border-slate-700/70 bg-white/40 dark:bg-slate-950/80 p-6 text-slate-700 dark:text-slate-300">
+                    <div class="rounded-3xl border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-950/80 p-6 text-slate-700 dark:text-slate-300">
                         <p class="font-semibold text-slate-900 dark:text-slate-100">Data nilai dalam proses input admin.</p>
                         <p class="mt-2 text-slate-500 dark:text-slate-400">Nilai belum tersedia. Mohon cek kembali nanti setelah admin sekolah selesai memasukkan data.</p>
                     </div>

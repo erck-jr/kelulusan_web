@@ -35,7 +35,7 @@
                     @csrf
                     <div class="space-y-1.5 text-left">
                         <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Nomor Induk Siswa Nasional (NISN)</label>
-                        <input type="text" name="nis" required class="w-full rounded-2xl bg-white/50 dark:bg-slate-950/50 border border-slate-300 dark:border-white/10 px-4 py-3 text-slate-800 dark:text-slate-200 text-sm focus:border-school-primary focus:ring-2 focus:ring-school-primary/20 outline-none transition" />
+                        <input type="text" name="nis" required class="w-full rounded-2xl bg-white dark:bg-slate-950/50 border border-slate-300 dark:border-white/10 px-4 py-3 text-slate-800 dark:text-slate-200 text-sm focus:border-school-primary focus:ring-2 focus:ring-school-primary/20 outline-none transition" />
                         @error('nis')<p class="text-xs text-rose-500 dark:text-rose-400">{{ $message }}</p>@enderror
                     </div>
 
@@ -44,12 +44,12 @@
                     </div>
                 </form>
             @elseif($activePeriod)
-                <div class="rounded-2xl bg-white/40 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 p-4 text-center">
+                <div class="rounded-2xl bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 p-4 text-center">
                     <p class="text-sm text-slate-500 dark:text-slate-400">Pengumuman kelulusan akan dibuka pada:</p>
                     <p class="text-sm text-slate-900 dark:text-white font-semibold mt-2">{{ $pengumumanDateTime->translatedFormat('d F Y, H:i') }} WIB</p>
                 </div>
             @else
-                <div class="rounded-2xl bg-white/40 dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 p-4 text-center">
+                <div class="rounded-2xl bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-white/10 p-4 text-center">
                     <p class="text-sm text-slate-500 dark:text-slate-400">Tidak ada periode kelulusan yang aktif saat ini.</p>
                 </div>
             @endif
