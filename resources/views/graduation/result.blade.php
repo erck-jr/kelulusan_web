@@ -48,6 +48,20 @@
                             <dt class="text-slate-500 dark:text-slate-400">Kelas</dt>
                             <dd class="text-slate-900 dark:text-white font-medium">{{ optional($student->schoolClass)->nama_kelas ?? 'Tidak tersedia' }}</dd>
                         </div>
+                        @if($student->schoolClass)
+                            @if($student->schoolClass->jurusan && $student->schoolClass->jurusan !== '-')
+                                <div class="space-y-1">
+                                    <dt class="text-slate-500 dark:text-slate-400">Jurusan</dt>
+                                    <dd class="text-slate-900 dark:text-white font-medium">{{ $student->schoolClass->jurusan }}</dd>
+                                </div>
+                            @endif
+                            @if($student->schoolClass->wali_kelas && $student->schoolClass->wali_kelas !== '-')
+                                <div class="space-y-1">
+                                    <dt class="text-slate-500 dark:text-slate-400">Wali Kelas</dt>
+                                    <dd class="text-slate-900 dark:text-white font-medium">{{ $student->schoolClass->wali_kelas }}</dd>
+                                </div>
+                            @endif
+                        @endif
                     </dl>
 
                     <div class="mt-6 rounded-3xl border border-slate-200 dark:border-slate-700/70 bg-white dark:bg-slate-950/70 p-4">
