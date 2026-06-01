@@ -105,7 +105,7 @@
                 </div>
             @endif
         </div>
-    </div>
+</div>
 
     <div id="import-modal" class="fixed inset-0 z-50 hidden">
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="document.getElementById('import-modal').classList.add('hidden')">
